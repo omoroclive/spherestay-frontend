@@ -1,0 +1,68 @@
+
+@import 'react-toastify/dist/ReactToastify.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Kenya-themed custom styles */
+:root {
+  --kenya-red: #CE1126;
+  --safari-green: #006B3C;
+  --acacia-gold: #D4AF37;
+  --savanna-orange: #FF6B35;
+}
+
+/* Performance optimizations */
+* {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  loading: lazy;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Kenya-themed gradients */
+.bg-kenya-gradient {
+  background: linear-gradient(135deg, var(--kenya-red), var(--savanna-orange));
+}
+
+.bg-safari-gradient {
+  background: linear-gradient(135deg, var(--safari-green), var(--acacia-gold));
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Performance: GPU acceleration for animations */
+.animate-fade-in,
+.animate-slide-up {
+  will-change: transform, opacity;
+}
