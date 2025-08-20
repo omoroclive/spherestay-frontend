@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import SpherestayLogo from '@/assets/images/spherestay_kenya_logo.svg';
-import MobileMenu from '../Header/MobileMenu';
+import MobileMenu from '../header/MobileMenu';
 import { Link } from 'react-router-dom';
 
 // Custom SVG Icons
