@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
-import PropertyCard from '@/components/ui/Card/PropertyCard';
-import LoadingSkeleton from '@/components/common/Loading/SkeletonLoader';
+import PropertyCard from '@/components/ui/card/PropertyCard';
+import LoadingSkeleton from '@/components/common/loading/SkeletonLoader';
 import { useApi } from '../../hooks/useApi';
 
 // Helper function to normalize API response

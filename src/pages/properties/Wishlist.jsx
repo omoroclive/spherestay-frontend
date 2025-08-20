@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import api from '@/services/api';
 import { useAuth } from '@/hooks/useAuth';
 import { fetchWishlist, clearWishlistError } from '@/store/slices/wishlistSlice';
-import PropertyCard from '@/components/ui/Card/PropertyCard';
+import PropertyCard from '@/components/ui/card/PropertyCard';
 import { FaHeart, FaExclamationTriangle, FaSignInAlt, FaHome } from 'react-icons/fa';
 
 const Wishlist = () => {
