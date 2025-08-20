@@ -1,4 +1,4 @@
-console.log("ENV:", import.meta.env);
+/*console.log("ENV:", import.meta.env);
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -28,21 +28,21 @@ function App() {
       />
       
       <Routes>
-        {/* Auth Routes */}
+        
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={< ForgotPassword/>} />
         </Route>
         
-        {/* Default redirect */}
+        {/* Default redirect 
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </div>
   )
 }
 
-export default App
+export default App*/
 
 /*
 
