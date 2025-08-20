@@ -14,7 +14,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import hikingMountKenya from '@/assets/images/hikingMountkenya.jpg';
 import beachVilla from '@/assets/images/dianiTestimonial.jpg';
 import swimming from '@/assets/images/swimmingKanyaboli.jpg';
-import tourExperience from '@/assets/images/tourGuideHellsGate.jpg';
+import tourExperience from '@/assets/images/tourguideHellsGate.jpg';
 
 // Testimonials Data
 const testimonials = [
