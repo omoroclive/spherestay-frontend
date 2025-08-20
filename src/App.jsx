@@ -7,29 +7,29 @@ import 'react-toastify/dist/ReactToastify.css';
 import AuthLayout from './components/common/authenticationLayout';
 import RegisterUser from '@/pages/auth/RegisterUser';
 //import RegisterUser from '@/pages/auth/RegisterUser';
-import RegisterHost from '@/pages/auth/registerHosts';
-import ForgotPassword from '@/pages/auth/forgotPassword'; // Ensure this matches the file name
+import RegisterHost from '@/pages/auth/RegisterHosts';
+import ForgotPassword from '@/pages/auth/ForgotPassword'; // Ensure this matches the file name
 import MainLayout from '@/components/common/mainLayout';
 import Home from '@/pages/Home/home';
 import Account from '@/pages/Profile/Account';
-import SubmitVerification from '@/pages/auth/submitVerification';
-import UploadPhoto from '@/pages/auth/uploadPhoto';
-import ResetPassword from '@/pages/auth/resetPassword';
-import UpdatePassword from '@/pages/auth/updatePassword';
-import UpdateProfile from '@/pages/auth/updateProfile';
-import PropertyDetail from '@/pages/propertiesDetails/propertiesDetails'; 
+import SubmitVerification from '@/pages/auth/SubmitVerification';
+import UploadPhoto from '@/pages/auth/UploadPhoto';
+import ResetPassword from '@/pages/auth/ResetPassword';
+import UpdatePassword from '@/pages/auth/UpdatePassword';
+import UpdateProfile from '@/pages/auth/UpdateProfile';
+import PropertyDetail from '@/pages/propertiesDetails/PropertiesDetails'; 
 import Properties from '@/pages/properties/Properties';
 import SearchResults from '@/pages/search/SearchResults';
-import PublicProperties from '@/pages/publicProperties/publicProperties';
-import PublicPropertiesDetails from '@/pages/publicProperties/publicPropertiesDetails';
-import ListProperty from '@/pages/propertyListing/listProperty';
-import Contact from '@/pages/contact/contact';
+import PublicProperties from '@/pages/publicProperties/PublicProperties';
+import PublicPropertiesDetails from '@/pages/publicProperties/PublicPropertiesDetails';
+import ListProperty from '@/pages/propertyListing/ListProperty';
+import Contact from '@/pages/contact/Contact';
 import Help from '@/pages/help/Help';
 import About from '@/pages/about/About';
-import MyProperties from '@/pages/properties/myProperties';
+import MyProperties from '@/pages/properties/MyProperties';
 import Wishlist from '@/pages/properties/Wishlist';
 import Policy from '@/pages/policy/Policy';
-import Terms from '@/pages/terms/terms';
+import Terms from '@/pages/terms/Terms';
 import Login from '@/pages/auth/Login';
 
 // Create a QueryClient instance
