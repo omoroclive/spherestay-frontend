@@ -6,7 +6,7 @@ import ErrorBoundary from '../../common/errorBoundary/ErrorBoundary';
 import { Suspense } from 'react';
 import { lazy } from 'react';
 
-const PropertyCard = lazy(() => import('../../ui/Card/PropertyCard'));
+const PropertyCard = lazy(() => import('../../ui/card/PropertyCard'));
 
 const FeaturedProperties = () => {
   const [retryCount, setRetryCount] = useState(0);
