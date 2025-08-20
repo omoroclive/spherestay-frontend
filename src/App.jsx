@@ -10,7 +10,7 @@ import RegisterUser from '@/pages/auth/RegisterUser';
 import RegisterHost from '@/pages/auth/RegisterHosts';
 import ForgotPassword from '@/pages/auth/ForgotPassword'; // Ensure this matches the file name
 import MainLayout from '@/components/common/mainLayout';
-import Home from '@/pages/Home/Home';
+import Home from '@/pages/home/Home';
 import Account from '@/pages/Profile/Account';
 import SubmitVerification from '@/pages/auth/SubmitVerification';
 import UploadPhoto from '@/pages/auth/UploadPhoto';
