@@ -17,7 +17,7 @@ import BoatRiding from '@/assets/images/boatRiding.svg';
 import CarRental from '@/assets/images/transport.svg';
 import BeachTour from '@/assets/images/dianiBeach.svg';
 import SpherestayLogo from '@/assets/images/spherestay_kenya_logo.svg';
-import SearchBox from '../../sections/Hero/SearchBox';
+import SearchBox from '../../sections/hero/SearchBox';
 import { 
   CalendarDaysIcon,
   HeartIcon,

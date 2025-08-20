@@ -14,7 +14,7 @@ import ErrorBoundary from '../../components/common/errorBoundary/ErrorBoundary';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import PopularPublicProperties from '@/pages/publicProperties/PopularPublicProperties';
 import FeaturedProperties from '../../components/sections/FeaturedProperties/FeaturedProperties';
-import SearchBox from '../../components/sections/Hero/SearchBox';
+import SearchBox from '../../components/sections/hero/SearchBox';
 
 // Lazy loaded components
 const HeroSection = lazy(() => import('../../components/sections/Hero/HeroSlider'));

@@ -6,7 +6,7 @@ import RusungaBanner from '@/assets/images/rusinga.svg';
 import MountKenya from '@/assets/images/mountKenya.svg';
 import { FaChevronDown } from 'react-icons/fa';
 import { MpesaIcon } from '@/assets/icons';
-import SearchBox from './SearchBox';
+import SearchBox from '../hero/SearchBox';
 import { useNavigate } from 'react-router-dom';
 
 // Swahili phrases

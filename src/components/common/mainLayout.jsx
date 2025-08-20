@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import Header from '../common/Header/Header';
-import Sidebar from '../common/Header/Sidebar';
+import Header from './header/Header';
+import Sidebar from './header/Sidebar';
 import { motion, AnimatePresence } from 'framer-motion';
-import Footer from './Footer/Footer';
+import Footer from './footer/Footer';
 import useMobileDetection from '../../hooks/useMobileDetection'; // Suggested custom hook
 
 const MainLayout = () => {
