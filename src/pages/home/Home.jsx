@@ -17,10 +17,10 @@ import FeaturedProperties from '../../components/sections/FeaturedProperties/Fea
 import SearchBox from '../../components/sections/hero/SearchBox';
 
 // Lazy loaded components
-const HeroSection = lazy(() => import('../../components/sections/Hero/HeroSlider'));
+const HeroSection = lazy(() => import('../../components/sections/hero/HeroSlider'));
 const AdvertisementSwiper = lazy(() => import('../../components/sections/Advertisement'));
-const Testimonials = lazy(() => import('../../components/sections/Testimonials/Testimonials'));
-const Newsletter = lazy(() => import('../../components/sections/Newsletter/Newsletter'));
+const Testimonials = lazy(() => import('../../components/sections/testimonials/Testimonials'));
+const Newsletter = lazy(() => import('../../components/sections/newsletter/Newsletter'));
 
 const Home = () => {
   const [userLocation, setUserLocation] = useLocalStorage('userLocation', null);
