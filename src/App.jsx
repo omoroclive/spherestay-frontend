@@ -11,7 +11,7 @@ import RegisterHost from '@/pages/auth/RegisterHosts';
 import ForgotPassword from '@/pages/auth/ForgotPassword'; // Ensure this matches the file name
 import MainLayout from '@/components/common/mainLayout';
 import Home from '@/pages/home/Home';
-import Account from '@/pages/Profile/Account';
+import Account from '@/pages/profile/Account';
 import SubmitVerification from '@/pages/auth/SubmitVerification';
 import UploadPhoto from '@/pages/auth/UploadPhoto';
 import ResetPassword from '@/pages/auth/ResetPassword';
