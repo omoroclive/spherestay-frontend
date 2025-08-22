@@ -8,6 +8,11 @@ import authReducer from './slices/authSlice'
 import uiReducer from './slices/uiSlice'
 import cacheReducer from './slices/cacheSlice'
 import wishlistReducer from './slices/wishlistSlice'
+import dashboardReducer from './slices/dashboardSlice'
+import propertyReducer from './slices/propertiesSlice' 
+import userReducer from './slices/usersSlice' 
+import bookingsReducer from './slices/bookingsSlice' 
+import publicPropertiesReducer from './slices/publicPropertiesSlice'
 
 const persistConfig = {
   key: 'root',
@@ -19,7 +24,13 @@ const rootReducer = combineReducers({
   auth: authReducer,
   ui: uiReducer,
   cache: cacheReducer,
-  wishlist: wishlistReducer, // Ensure wishlistReducer is imported and added
+  wishlist: wishlistReducer, 
+  dashboard: dashboardReducer, 
+  properties: propertyReducer, 
+  users: userReducer, 
+  bookings: bookingsReducer, 
+  publicProperties: publicPropertiesReducer,
+  
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

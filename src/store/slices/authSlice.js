@@ -259,7 +259,7 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user || action.payload.data?.user;
+        state.user = action.payload.data;
         state.token = action.payload.token;
         state.isAuthenticated = true;
         state.success = true;
@@ -279,7 +279,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user || action.payload.data?.user;
+        state.user = action.payload.data;
         state.token = action.payload.token;
         state.isAuthenticated = true;
         state.success = true;

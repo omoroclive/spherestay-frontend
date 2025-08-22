@@ -53,6 +53,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import LoadingSkeleton from '../../components/common/loading/SkeletonLoader';
 import { useApi } from '../../hooks/useApi';
+import  NearbyProperties  from '../properties/NearbyProperties';
 
 // Fix Leaflet marker icon issue
 delete L.Icon.Default.prototype._getIconUrl;
@@ -1531,6 +1532,7 @@ const PublicPropertiesDetails = () => {
       </div>
 
       <div className="lg:hidden h-20"></div>
+      {/*<NearbyProperties/>*/}
     </div>
   );
 };

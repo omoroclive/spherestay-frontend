@@ -6,10 +6,11 @@ import 'react-toastify/dist/ReactToastify.css';
 // Components
 import AuthLayout from './components/common/authenticationLayout';
 import RegisterUser from '@/pages/auth/RegisterUser';
-//import RegisterUser from '@/pages/auth/RegisterUser';
 import RegisterHost from '@/pages/auth/RegisterHosts';
-import ForgotPassword from '@/pages/auth/ForgotPassword'; // Ensure this matches the file name
+import ForgotPassword from '@/pages/auth/ForgotPassword';
 import MainLayout from '@/components/common/mainLayout';
+import AdminLayout from '@/components/admin/AdminLayout';
+import AdminGuard from '@/components/admin/AdminGuard';
 import Home from '@/pages/home/Home';
 import Account from '@/pages/profile/Account';
 import SubmitVerification from '@/pages/auth/SubmitVerification';
@@ -17,7 +18,7 @@ import UploadPhoto from '@/pages/auth/UploadPhoto';
 import ResetPassword from '@/pages/auth/ResetPassword';
 import UpdatePassword from '@/pages/auth/UpdatePassword';
 import UpdateProfile from '@/pages/auth/UpdateProfile';
-import PropertyDetail from '@/pages/propertiesDetails/PropertiesDetails'; 
+import PropertyDetail from '@/pages/propertiesDetails/PropertiesDetails';
 import Properties from '@/pages/properties/Properties';
 import SearchResults from '@/pages/search/SearchResults';
 import PublicProperties from '@/pages/publicProperties/PublicProperties';
@@ -31,6 +32,13 @@ import Wishlist from '@/pages/properties/Wishlist';
 import Policy from '@/pages/policy/Policy';
 import Terms from '@/pages/terms/Terms';
 import Login from '@/pages/auth/Login';
+import Checkout from './pages/properties/Checkout';
+import Dashboard from '@/pages/admin/Dashboard';
+import Users from '@/pages/admin/Users';
+import AdminProperties from '@/pages/admin/Properties';
+import Bookings from '@/pages/admin/Bookings';
+import AdminPublicProperties from '@/pages/admin/PublicProperties';
+import Employees from '@/pages/admin/Employees';
 
 // Create a QueryClient instance
 const queryClient = new QueryClient({
@@ -62,7 +70,6 @@ function App() {
         className={isAuthRoute ? 'mt-4' : 'mt-12 sm:mt-16 md:mt-20'}
         toastClassName="rounded-lg shadow-md max-w-[90vw] mx-auto"
       />
-      
       <Routes>
         {/* Auth Routes - No Header */}
         <Route element={<AuthLayout />}>
@@ -71,7 +78,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/register-host" element={<RegisterHost />} />
         </Route>
-        
+
         {/* Main App Routes - With Header */}
         <Route element={<MainLayout />}>
           <Route path="/home" element={<Home />} />
@@ -81,12 +88,13 @@ function App() {
           <Route path="/public-properties" element={<PublicProperties />} />
           <Route path="/publicPropertiesdetails/:id" element={<PublicPropertiesDetails />} />
           <Route path="/my-properties" element={<MyProperties />} />
-          <Route path='/wishlist' element={<Wishlist/>} />
-          <Route path='/contact' element={<Contact />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/help" element={<Help />} />
-          <Route path='/about' element={<About />} />
-          <Route path='/policy' element={<Policy />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/policy" element={<Policy />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/account" element={<Account />}>
             <Route path="update-profile" element={<UpdateProfile />} />
             <Route path="update-password" element={<UpdatePassword />} />
@@ -94,13 +102,25 @@ function App() {
             <Route path="upload-photo" element={<UploadPhoto />} />
             <Route path="submit-verification" element={<SubmitVerification />} />
           </Route>
-          {/* Other routes remain unchanged */}
         </Route>
-        
-        {/* Default redirect */}
+
+       {/* Admin Routes - With Admin Layout and Guard */}
+<Route element={<AdminGuard />}>
+  <Route element={<AdminLayout />}>
+    <Route path="/admin/dashboard" element={<Dashboard />} />
+    <Route path="/admin/users" element={<Users />} />
+    <Route path="/admin/properties" element={<AdminProperties />} />
+    <Route path="/admin/bookings" element={<Bookings />} />
+    <Route path="/admin/public-properties" element={<AdminPublicProperties />} />
+    <Route path="/admin/employees" element={<Employees />} />
+  </Route>
+</Route>
+
+
+        {/* Default and catch-all routes */}
         <Route path="/" element={<Navigate to="/home" replace />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
         <Route path="/search" element={<SearchResults />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </QueryClientProvider>
   );

@@ -10,6 +10,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
+
 // Images
 import hikingMountKenya from '@/assets/images/hikingMountkenya.jpg';
 import beachVilla from '@/assets/images/dianiTestimonial.jpg';
@@ -79,12 +80,10 @@ const Testimonials = () => {
           viewport={{ once: true }}
           className="text-center mb-14"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Traveler Stories That Inspire
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Hear from real travelers who turned their dream adventures into unforgettable realities.
-          </p>
+        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 text-left">
+  Traveler Stories 
+</h2>
+        
         </motion.div>
 
         {/* Swiper Carousel */}

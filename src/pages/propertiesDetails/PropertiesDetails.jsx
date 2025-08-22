@@ -117,7 +117,9 @@ const PropertyHeader = ({ property }) => (
 );
 
 // Component for booking form
-const BookingForm = ({ bookingForm, setBookingForm, property, bookingStatus, handleBookNow }) => {
+const BookingForm = ({ bookingForm, setBookingForm, property }) => {
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setBookingForm((prev) => ({ ...prev, [name]: value }));
@@ -134,6 +136,31 @@ const BookingForm = ({ bookingForm, setBookingForm, property, bookingStatus, han
     const subtotal = basePrice * nights;
     const serviceFee = Math.round(subtotal * 0.14);
     return { nights, subtotal, serviceFee, total: subtotal + serviceFee };
+  };
+
+  const handleReserve = () => {
+    const bookingDetails = calculateBookingDetails();
+    if (!bookingDetails) {
+      toast.error('Please select valid dates.');
+      return;
+    }
+    navigate('/checkout', {
+      state: {
+        propertyId: property._id,
+        bookingDetails: {
+          checkInDate: bookingForm.checkInDate,
+          checkOutDate: bookingForm.checkOutDate,
+          guests: bookingForm.guests,
+          ...bookingDetails,
+        },
+        property: {
+          title: property.title,
+          image: property.images?.[0]?.url || '/images/property-placeholder.jpg',
+          pricing: property.pricing,
+          location: property.location,
+        },
+      },
+    });
   };
 
   const bookingDetails = calculateBookingDetails();
@@ -202,33 +229,11 @@ const BookingForm = ({ bookingForm, setBookingForm, property, bookingStatus, han
         </motion.div>
       )}
       <button
-        onClick={handleBookNow}
-        disabled={bookingStatus.loading}
-        className="w-full bg-gradient-to-r from-[#E83A17] to-[#ff4d26] text-white font-bold py-4 px-6 rounded-xl hover:from-[#c53214] hover:to-[#e03419] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+        onClick={handleReserve}
+        className="w-full bg-gradient-to-r from-[#E83A17] to-[#ff4d26] text-white font-bold py-4 px-6 rounded-xl hover:from-[#c53214] hover:to-[#e03419] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
       >
-        {bookingStatus.loading ? (
-          <div className="flex items-center justify-center gap-2">
-            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            <span>Processing...</span>
-          </div>
-        ) : bookingStatus.success ? (
-          <div className="flex items-center justify-center gap-2">
-            <FaCheckCircle />
-            <span>Booking Confirmed!</span>
-          </div>
-        ) : (
-          <span>Reserve Now</span>
-        )}
+        Reserve Now
       </button>
-      {bookingStatus.error && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl"
-        >
-          {bookingStatus.error}
-        </motion.div>
-      )}
     </div>
   );
 };
@@ -271,7 +276,6 @@ const Amenities = ({ amenities }) => {
 const PremiumPropertyDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [bookingStatus, setBookingStatus] = useState({ loading: false, success: false, error: null });
   const [bookingForm, setBookingForm] = useState({ checkInDate: '', checkOutDate: '', guests: 1 });
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showImageModal, setShowImageModal] = useState(false);
@@ -279,30 +283,6 @@ const PremiumPropertyDetail = () => {
 
   const { data: response, isLoading, error } = useApi(`/api/properties/${id}`);
   const property = response?.data;
-
-  const handleBookNow = async () => {
-    const bookingDetails = calculateBookingDetails();
-    if (!bookingDetails) {
-      toast.error('Please select valid dates.');
-      return;
-    }
-
-    setBookingStatus({ loading: true, success: false, error: null });
-    try {
-      await api.post('/api/bookings', {
-        propertyId: id,
-        checkInDate: bookingForm.checkInDate,
-        checkOutDate: bookingForm.checkOutDate,
-        guests: bookingForm.guests,
-      });
-      setBookingStatus({ loading: false, success: true, error: null });
-      toast.success('Booking confirmed!');
-    } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Failed to create booking';
-      setBookingStatus({ loading: false, success: false, error: errorMessage });
-      toast.error(errorMessage);
-    }
-  };
 
   const handleWishlistToggle = () => {
     setIsWishlisted(!isWishlisted);
@@ -535,8 +515,6 @@ const PremiumPropertyDetail = () => {
                   bookingForm={bookingForm}
                   setBookingForm={setBookingForm}
                   property={property}
-                  bookingStatus={bookingStatus}
-                  handleBookNow={handleBookNow}
                 />
                 <div className="grid grid-cols-2 gap-3 mt-6">
                   <button
@@ -550,7 +528,7 @@ const PremiumPropertyDetail = () => {
                   </button>
                   <button
                     onClick={handleShare}
-                    className="flex items-center justify-center gap-2 py-3 px-4 bg-gray-50 text-gray-700 border-2 border-gray-200 rounded-xl font-medium hover:bg-gray-100 transition-all duration-300"
+                    className="flex items-center justify-center gap-2 py-3 px-4 bg-gray-50 text-gray-700 border fixer-upper-2 border-gray-200 rounded-xl font-medium hover:bg-gray-100 transition-all duration-300"
                   >
                     <FaShare />
                     <span>Share</span>
@@ -661,8 +639,30 @@ const PremiumPropertyDetail = () => {
                 </div>
               </div>
               <button
-                onClick={handleBookNow}
-                disabled={bookingStatus.loading}
+                onClick={() => {
+                  const bookingDetails = calculateBookingDetails();
+                  if (!bookingDetails) {
+                    toast.error('Please select valid dates.');
+                    return;
+                  }
+                  navigate('/checkout', {
+                    state: {
+                      propertyId: property._id,
+                      bookingDetails: {
+                        checkInDate: bookingForm.checkInDate,
+                        checkOutDate: bookingForm.checkOutDate,
+                        guests: bookingForm.guests,
+                        ...bookingDetails,
+                      },
+                      property: {
+                        title: property.title,
+                        image: property.images?.[0]?.url || '/images/property-placeholder.jpg',
+                        pricing: property.pricing,
+                        location: property.location,
+                      },
+                    },
+                  });
+                }}
                 className="bg-gradient-to-r from-[#E83A17] to-[#ff4d26] text-white font-bold py-3 px-8 rounded-xl hover:from-[#c53214] hover:to-[#e03419] transform hover:scale-105 transition-all duration-300 shadow-lg"
               >
                 Reserve
@@ -673,6 +673,19 @@ const PremiumPropertyDetail = () => {
       </div>
     </ErrorBoundary>
   );
+
+  function calculateBookingDetails() {
+    if (!bookingForm.checkInDate || !bookingForm.checkOutDate) return null;
+    const checkIn = new Date(bookingForm.checkInDate);
+    const checkOut = new Date(bookingForm.checkOutDate);
+    const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+    if (nights <= 0) return null;
+
+    const basePrice = property.pricing?.basePrice || 0;
+    const subtotal = basePrice * nights;
+    const serviceFee = Math.round(subtotal * 0.14);
+    return { nights, subtotal, serviceFee, total: subtotal + serviceFee };
+  }
 };
 
 export default React.memo(PremiumPropertyDetail);

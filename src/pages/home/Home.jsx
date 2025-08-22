@@ -201,7 +201,7 @@ const Home = () => {
         </Suspense>
       </ErrorBoundary>
 
-      {/* M-Pesa CTA */}
+      {/* M-Pesa CTA 
       <section className="bg-[#00A651] text-white py-6 md:py-12" aria-labelledby="mpesa-cta-heading">
         <div className="container mx-auto px-4 text-center section-padding">
           <motion.div
@@ -231,6 +231,7 @@ const Home = () => {
           </Link>
         </div>
       </section>
+      */}
 
       {/* Cultural Highlight */}
       <section className="container mx-auto px-4 py-6 md:py-16 section-padding" aria-labelledby="cultural-highlight-heading">
@@ -303,12 +304,13 @@ const Home = () => {
         </Suspense>
       </ErrorBoundary>
 
-      {/* Newsletter */}
+      {/* Newsletter 
       <ErrorBoundary fallback={null}>
         <Suspense fallback={<LoadingSkeleton height="200px" />}>
           <Newsletter />
         </Suspense>
       </ErrorBoundary>
+      */}
     </div>
   );
 };

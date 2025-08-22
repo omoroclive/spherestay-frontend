@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
-import { loginUser } from '@/store/slices/authSlice'
+import { loginUser, fetchUser } from '@/store/slices/authSlice'
 import { useState } from 'react'
 import { 
   EyeIcon, 
@@ -22,12 +22,24 @@ const Login = () => {
   const watchEmail = watch('email')
   const watchPassword = watch('password')
 
-  const onSubmit = async (data) => {
-    const result = await dispatch(loginUser(data))
-    if (result.payload) {
-      navigate('/') // Will redirect to home when we add it
+const onSubmit = async (data) => {
+  const result = await dispatch(loginUser(data));
+
+  if (result.payload) {
+    const user = result.payload.data; // 👈 use .data directly
+
+    console.log("Login payload:", result.payload);
+
+    if (user?.role === 'admin' || user?.role === 'superadmin') {
+      navigate('/admin/dashboard');
+    } else {
+      navigate('/home');
     }
   }
+};
+
+
+
 
   return (
     <div className="w-full max-w-md mx-auto">
