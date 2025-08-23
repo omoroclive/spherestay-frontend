@@ -39,6 +39,11 @@ import AdminProperties from '@/pages/admin/Properties';
 import Bookings from '@/pages/admin/Bookings';
 import AdminPublicProperties from '@/pages/admin/PublicProperties';
 import Employees from '@/pages/admin/Employees';
+import Accommodation from './pages/properties/Accomodation';
+import CulturalTour from './pages/properties/CulturalTour';
+import Beach from './pages/properties/Beach';
+import Experience from './pages/properties/Experience';
+import Transport from './pages/properties/Transport';
 
 // Create a QueryClient instance
 const queryClient = new QueryClient({
@@ -95,6 +100,11 @@ function App() {
           <Route path="/policy" element={<Policy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path='/accommodation' element={<Accommodation />} />
+          <Route path='/culture' element={<CulturalTour />} />
+          <Route path='/beach' element={<Beach />} />
+          <Route path='/experience' element={<Experience />} />
+          <Route path='/transport' element={<Transport />}  />
           <Route path="/account" element={<Account />}>
             <Route path="update-profile" element={<UpdateProfile />} />
             <Route path="update-password" element={<UpdatePassword />} />

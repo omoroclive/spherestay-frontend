@@ -34,8 +34,16 @@ const PropertyCard = ({ property, lazyLoadImages = true, className = '' }) => {
     }
   };
 
+  // Cloudinary optimizer
+  const optimizeImage = (url, width = 800) => {
+    if (!url || !url.includes("res.cloudinary.com")) return url;
+    return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width}/`);
+  };
+
   // Get first image or placeholder
-  const mainImage = property.images?.[0]?.url || '/images/property-placeholder.jpg';
+  const mainImage = property.images?.[0]?.url 
+    ? optimizeImage(property.images[0].url, 800)
+    : '/images/property-placeholder.jpg';
 
   // Handle wishlist toggle (placeholder for future implementation)
   const handleWishlistToggle = (e) => {

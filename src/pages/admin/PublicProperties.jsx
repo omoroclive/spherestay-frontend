@@ -17,7 +17,7 @@ export const fetchPublicProperties = createAsyncThunk(
   'publicProperties/fetchPublicProperties',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await api.get('/api/publicProperties');
+      const { data } = await api.get('/api/publicproperties');
       return data.data || [];
     } catch (error) {
       const message = error.response?.data?.message || 'Failed to fetch public properties';
@@ -30,7 +30,7 @@ export const createPublicProperty = createAsyncThunk(
   'publicProperties/createPublicProperty',
   async (propertyData, { rejectWithValue }) => {
     try {
-      const { data } = await api.post('/api/public-properties', propertyData);
+      const { data } = await api.post('/api/publicproperties', propertyData);
       return data.data || data.publicProperty;
     } catch (error) {
       const message = error.response?.data?.message || 'Failed to create public property';

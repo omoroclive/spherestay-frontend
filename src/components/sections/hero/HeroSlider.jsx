@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 const SWAHILI_PHRASES = [
   { text: "Karibu Kenya!", translation: "Welcome to Kenya!" },
   { text: "Pata mazingira mazuri", translation: "Find beautiful environments" },
-  { text: "Lipa kwa M-Pesa", translation: "Pay with M-Pesa" },
+  { text: "Lipa na M-Pesa", translation: "Pay with M-Pesa" },
   { text: "Safari njema!", translation: "Have a good trip!" }
 ];
 
@@ -124,8 +124,8 @@ const HeroSection = () => {
             className="mt-4 sm:mt-6 inline-flex items-center gap-2 bg-[#00A651] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-lg"
           >
             <MpesaIcon className="w-5 sm:w-6 h-5 sm:h-6" />
-            <span className="text-sm sm:text-base font-medium">Lipa kwa M-Pesa</span>
-            <span className="text-xs sm:text-sm opacity-80">(Pay with M-Pesa)</span>
+            <span className="text-sm sm:text-base font-medium">Lipa na M-Pesa</span>
+            
           </motion.div>
         </motion.div>
 

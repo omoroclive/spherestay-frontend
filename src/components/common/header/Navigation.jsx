@@ -63,8 +63,8 @@ const Navigation = ({ className = "" }) => {
       category: 'transport',
       description: 'Travel & mobility',
       subcategories: [
-        { label: 'Car Rental', href: '/transport/car-rental', image: CarRental, subCategory: 'car_rental', description: 'Vehicle rentals' },
-        { label: 'Airport Transfer', href: '/transport/transfer', image: SafariTour, subCategory: 'transfer', description: 'Airport shuttles' }
+        { label: 'Car Rental', href: '/transport', image: CarRental, subCategory: 'car_rental', description: 'Vehicle rentals' },
+        { label: 'Airport Transfer', href: '/transport', image: SafariTour, subCategory: 'transfer', description: 'Airport shuttles' }
       ]
     },
     {
@@ -74,9 +74,9 @@ const Navigation = ({ className = "" }) => {
       description: 'Adventures & tours',
       subcategories: [
         { label: 'Safari Tours', href: '/experience/safari', image: Safari, subCategory: 'safari', description: 'Wildlife adventures' },
-        { label: 'Cultural Tours', href: '/experience/culture', image: Cultural, subCategory: 'cultural_tour', description: 'Local traditions' },
+        { label: 'Cultural Tours', href: '/culture-tour', image: Cultural, subCategory: 'cultural_tour', description: 'Local traditions' },
         { label: 'Adventure Tours', href: '/experience/adventure', image: AdventureTour, subCategory: 'adventure_tour', description: 'Thrilling activities' },
-        { label: 'Beach Tours', href: '/experience/beach', image: BeachTour, subCategory: 'beach_tour', description: 'Coastal adventures' },
+        { label: 'Beach Tours', href: '/beach', image: BeachTour, subCategory: 'beach_tour', description: 'Coastal adventures' },
         { label: 'Boat Riding', href: '/experience/boat', image: BoatRiding, subCategory: 'boat_riding', description: 'Water activities' }
       ]
     },
@@ -86,7 +86,7 @@ const Navigation = ({ className = "" }) => {
       category: 'accommodation',
       description: 'Places to stay',
       subcategories: [
-        { label: 'Hotels', href: '/accommodation/hotels', image: Hotels, subCategory: 'hotel', description: 'Luxury stays' },
+        { label: 'Hotels', href: '/accommodation', image: Hotels, subCategory: 'hotel', description: 'Luxury stays' },
         { label: 'Villas', href: '/accommodation/villas', image: Villa, subCategory: 'villa', description: 'Private retreats' },
         { label: 'Lodges', href: '/accommodation/lodges', image: Safari, subCategory: 'lodge', description: 'Safari lodges' }
       ]
@@ -97,7 +97,7 @@ const Navigation = ({ className = "" }) => {
       category: 'services',
       description: 'Additional services',
       subcategories: [
-        { label: 'Spa & Wellness', href: '/services/spa', image: Spa, subCategory: 'spa', description: 'Relaxation services' },
+        { label: 'Spa & Wellness', href: '/services', image: Spa, subCategory: 'spa', description: 'Relaxation services' },
         { label: 'Cultural Experiences', href: '/services/cultural', image: CulturalTour, subCategory: 'cultural_service', description: 'Immersive culture' }
       ]
     }
