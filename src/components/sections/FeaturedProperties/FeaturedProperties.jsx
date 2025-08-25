@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useApi } from '@/hooks/useApi';
 import LoadingSkeleton from '../../common/loading/SkeletonLoader';
@@ -8,8 +8,54 @@ import { lazy } from 'react';
 
 const PropertyCard = lazy(() => import('../../ui/card/PropertyCard'));
 
+// Cloudinary image optimization function
+const getOptimizedImageUrl = (url, width = 400, height = 250, options = {}) => {
+  if (!url) return null;
+  
+  // If it's already a Cloudinary URL, apply transformations
+  if (url.includes('res.cloudinary.com')) {
+    const transformParams = [
+      'c_fill', // Crop to fill
+      `w_${width}`,
+      `h_${height}`,
+      'q_auto', // Automatic quality
+      'f_auto', // Automatic format (WebP if supported)
+      'dpr_auto', // Automatic device pixel ratio
+    ];
+    
+    if (options.blur) transformParams.push('e_blur:200');
+    if (options.grayscale) transformParams.push('e_grayscale');
+    
+    // Insert transformations into the URL
+    const parts = url.split('/upload/');
+    if (parts.length === 2) {
+      return `${parts[0]}/upload/${transformParams.join(',')}/${parts[1]}`;
+    }
+  }
+  
+  // For non-Cloudinary URLs, return as-is (consider uploading to Cloudinary)
+  return url;
+};
+
+// Function to optimize property images
+const optimizePropertyImages = (property) => {
+  if (!property.images || !Array.isArray(property.images)) return property;
+  
+  const optimizedImages = property.images.map(img => ({
+    ...img,
+    optimizedUrl: getOptimizedImageUrl(img.url, 400, 250),
+    blurUrl: getOptimizedImageUrl(img.url, 20, 20, { blur: true })
+  }));
+  
+  return {
+    ...property,
+    images: optimizedImages
+  };
+};
+
 const FeaturedProperties = () => {
   const [retryCount, setRetryCount] = useState(0);
+  const [loadedProperties, setLoadedProperties] = useState(new Set());
   const { data, isLoading, error } = useApi('/api/properties', {
     params: { limit: 6, sort: '-metrics.views,-rating.overall', /*status: 'published'*/ }
   });
@@ -24,9 +70,17 @@ const FeaturedProperties = () => {
     }
   }, [error, retryCount]);
 
-  // Extract properties from API response
-  const featuredProperties = data?.data || [];
+  // Extract and optimize properties from API response
+  const featuredProperties = useMemo(() => {
+    const properties = data?.data || [];
+    return properties.map(optimizePropertyImages);
+  }, [data]);
+
   console.log('Featured Properties:', featuredProperties);
+
+  const handleImageLoad = (propertyId) => {
+    setLoadedProperties(prev => new Set(prev).add(propertyId));
+  };
 
   if (error) {
     const errorMessage = error.message.includes('404')
@@ -117,7 +171,9 @@ const FeaturedProperties = () => {
                       images: property.images || [{ 
                         url: '/images/property-placeholder.jpg', 
                         caption: 'Property image', 
-                        isMain: true 
+                        isMain: true,
+                        optimizedUrl: getOptimizedImageUrl('/images/property-placeholder.jpg', 400, 250),
+                        blurUrl: getOptimizedImageUrl('/images/property-placeholder.jpg', 20, 20, { blur: true })
                       }],
                       pricing: property.pricing || { 
                         basePrice: 0, 
@@ -154,6 +210,8 @@ const FeaturedProperties = () => {
                       },
                     }}
                     lazyLoadImages
+                    onImageLoad={() => handleImageLoad(property._id)}
+                    isImageLoaded={loadedProperties.has(property._id)}
                   />
                 ))}
               </div>

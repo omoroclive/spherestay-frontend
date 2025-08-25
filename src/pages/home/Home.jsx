@@ -126,12 +126,12 @@ const Home = () => {
         </Suspense>
       </ErrorBoundary>
 
-      {/* Quick Search Bar */}
+      {/* Quick Search Bar 
       <section className="bg-white shadow-md search-bar-container mx-2 sm:mx-4 rounded-lg relative z-10">
         <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-6">
           <SearchBox setSearchQuery={setSearchQuery} handleSearch={handleSearch} />
         </div>
-      </section>
+      </section>*/}
 
       {/* Featured Experiences */}
       <section className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 section-padding" aria-labelledby="featured-experiences-heading">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
@@ -24,6 +24,7 @@ import { useApi } from '../../hooks/useApi';
 
 const PopularPublicProperties = () => {
   const [publicProperties, setPublicProperties] = useState([]);
+  const [loadedImages, setLoadedImages] = useState(new Set());
   const navigate = useNavigate();
 
   // Use useApi hook to fetch public properties
@@ -58,6 +59,39 @@ const PopularPublicProperties = () => {
       setPublicProperties([]); // Ensure no stale data on error
     }
   }, [data, isLoading, error]);
+
+  // Cloudinary image optimization function
+  const getOptimizedImageUrl = (url, width = 400, height = 250, options = {}) => {
+    if (!url) return null;
+    
+    // If it's already a Cloudinary URL, apply transformations
+    if (url.includes('res.cloudinary.com')) {
+      const transformParams = [
+        'c_fill', // Crop to fill
+        `w_${width}`,
+        `h_${height}`,
+        'q_auto', // Automatic quality
+        'f_auto', // Automatic format (WebP if supported)
+        'dpr_auto', // Automatic device pixel ratio
+      ];
+      
+      if (options.blur) transformParams.push('e_blur:200');
+      if (options.grayscale) transformParams.push('e_grayscale');
+      
+      // Insert transformations into the URL
+      const parts = url.split('/upload/');
+      if (parts.length === 2) {
+        return `${parts[0]}/upload/${transformParams.join(',')}/${parts[1]}`;
+      }
+    }
+    
+    // For non-Cloudinary URLs, return as-is (consider uploading to Cloudinary)
+    return url;
+  };
+
+  const handleImageLoad = (imageId) => {
+    setLoadedImages(prev => new Set(prev).add(imageId));
+  };
 
   const handlePropertyClick = (property) => {
     navigate(`/publicPropertiesDetails/${property._id}`, {
@@ -204,171 +238,202 @@ const PopularPublicProperties = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {publicProperties.map((property, index) => (
-            <motion.div
-              key={property._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.4 }}
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer group"
-              onClick={() => handlePropertyClick(property)}
-              role="button"
-              tabIndex={0}
-              aria-label={`View details for ${property.name}`}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handlePropertyClick(property);
-                }
-              }}
-            >
-              <div className="relative h-48 overflow-hidden">
-                {property.images && property.images.length > 0 ? (
-                  <img
-                    src={property.images.find(img => img.isPrimary)?.url || property.images[0]?.url}
-                    alt={property.images.find(img => img.isPrimary)?.caption || property.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                    {getCategoryIcon(property.category, property.subCategory)}
-                  </div>
-                )}
-                
-                <div className="absolute top-3 left-3">
-                  {property.entryFees?.freeEntry ? (
-                    <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                      <MdOutlineFreeBreakfast className="text-sm" />
-                      Free Entry
-                    </span>
+          {publicProperties.map((property, index) => {
+            const primaryImage = property.images?.find(img => img.isPrimary) || property.images?.[0];
+            const imageId = `${property._id}-${primaryImage?.url || 'no-image'}`;
+            const isImageLoaded = loadedImages.has(imageId);
+            const optimizedImageUrl = primaryImage ? 
+              getOptimizedImageUrl(primaryImage.url, 400, 250) : null;
+            const blurImageUrl = primaryImage ? 
+              getOptimizedImageUrl(primaryImage.url, 20, 20, { blur: true }) : null;
+            
+            return (
+              <motion.div
+                key={property._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.4 }}
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer group"
+                onClick={() => handlePropertyClick(property)}
+                role="button"
+                tabIndex={0}
+                aria-label={`View details for ${property.name}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handlePropertyClick(property);
+                  }
+                }}
+              >
+                <div className="relative h-48 overflow-hidden">
+                  {optimizedImageUrl ? (
+                    <>
+                      {/* Blurred placeholder */}
+                      {!isImageLoaded && blurImageUrl && (
+                        <img
+                          src={blurImageUrl}
+                          alt=""
+                          className="w-full h-full object-cover absolute inset-0"
+                          style={{ filter: 'blur(10px)' }}
+                        />
+                      )}
+                      
+                      {/* Main optimized image */}
+                      <img
+                        src={optimizedImageUrl}
+                        alt={primaryImage.caption || property.name}
+                        className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${
+                          !isImageLoaded ? 'opacity-0' : 'opacity-100'
+                        }`}
+                        loading="lazy"
+                        decoding="async"
+                        onLoad={() => handleImageLoad(imageId)}
+                        style={{
+                          transition: 'opacity 0.3s ease-in-out',
+                          contentVisibility: 'auto'
+                        }}
+                      />
+                    </>
                   ) : (
-                    <span className="bg-[#E83A17] text-white px-2 py-1 rounded-full text-xs font-medium">
-                      Entry Fee Required
-                    </span>
+                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                      {getCategoryIcon(property.category, property.subCategory)}
+                    </div>
                   )}
-                </div>
-
-                <div className="absolute top-3 right-3 flex flex-col gap-1">
-                  {property.metrics?.views > 0 && (
-                    <span className="bg-black/70 text-white px-2 py-1 rounded-full text-xs flex items-center gap-1">
-                      <FaEye className="text-xs" />
-                      {property.metrics.views > 1000 ? `${(property.metrics.views/1000).toFixed(1)}k` : property.metrics.views}
-                    </span>
-                  )}
-                  {property.metrics?.favorites > 0 && (
-                    <span className="bg-red-500/80 text-white px-2 py-1 rounded-full text-xs flex items-center gap-1">
-                      <FaHeart className="text-xs" />
-                      {property.metrics.favorites}
-                    </span>
-                  )}
-                </div>
-
-                <div className="absolute bottom-3 left-3">
-                  <span className="bg-white/90 backdrop-blur-sm text-gray-800 px-3 py-1 rounded-full text-xs font-medium capitalize">
-                    {property.category?.replace('_', ' ') || 'Attraction'}
-                  </span>
-                </div>
-
-                {property.safety?.level && (
-                  <div className="absolute bottom-3 right-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize flex items-center gap-1 ${
-                      property.safety.level === 'safe' 
-                        ? 'bg-green-500/90 text-white' 
-                        : property.safety.level === 'moderate'
-                        ? 'bg-yellow-500/90 text-white'
-                        : 'bg-red-500/90 text-white'
-                    }`}>
-                      <FaShieldAlt className="text-xs" />
-                      {property.safety.level}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-lg font-bold text-gray-900 line-clamp-1 flex-1">
-                    {property.name}
-                  </h3>
-                  {property.featured && (
-                    <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium ml-2">
-                      Featured
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex items-center text-gray-600 mb-3">
-                  <FaMapMarkerAlt className="text-[#E83A17] text-sm mr-1 flex-shrink-0" />
-                  <span className="text-sm truncate">{formatLocation(property.location)}</span>
-                </div>
-
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                  {property.shortDescription || property.description}
-                </p>
-
-                {property.features?.activities && property.features.activities.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {property.features.activities.slice(0, 3).map((activity, idx) => (
-                      <div key={idx} className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full text-xs text-gray-700">
-                        {getActivityIcon(activity)}
-                        <span className="capitalize">{activity.replace('_', ' ')}</span>
-                      </div>
-                    ))}
-                    {property.features.activities.length > 3 && (
-                      <span className="bg-gray-200 px-2 py-1 rounded-full text-xs text-gray-600">
-                        +{property.features.activities.length - 3} more
+                  
+                  <div className="absolute top-3 left-3">
+                    {property.entryFees?.freeEntry ? (
+                      <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                        <MdOutlineFreeBreakfast className="text-sm" />
+                        Free Entry
+                      </span>
+                    ) : (
+                      <span className="bg-[#E83A17] text-white px-2 py-1 rounded-full text-xs font-medium">
+                        Entry Fee Required
                       </span>
                     )}
                   </div>
-                )}
 
-                {property.rating?.overall > 0 && (
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-1">
-                      <FaStar className="text-yellow-500 text-sm" />
-                      <span className="text-sm font-medium">{property.rating.overall.toFixed(1)}</span>
-                      {property.rating.totalReviews > 0 && (
-                        <span className="text-xs text-gray-500">
-                          ({property.rating.totalReviews} reviews)
+                  <div className="absolute top-3 right-3 flex flex-col gap-1">
+                    {property.metrics?.views > 0 && (
+                      <span className="bg-black/70 text-white px-2 py-1 rounded-full text-xs flex items-center gap-1">
+                        <FaEye className="text-xs" />
+                        {property.metrics.views > 1000 ? `${(property.metrics.views/1000).toFixed(1)}k` : property.metrics.views}
+                      </span>
+                    )}
+                    {property.metrics?.favorites > 0 && (
+                      <span className="bg-red-500/80 text-white px-2 py-1 rounded-full text-xs flex items-center gap-1">
+                        <FaHeart className="text-xs" />
+                        {property.metrics.favorites}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="absolute bottom-3 left-3">
+                    <span className="bg-white/90 backdrop-blur-sm text-gray-800 px-3 py-1 rounded-full text-xs font-medium capitalize">
+                      {property.category?.replace('_', ' ') || 'Attraction'}
+                    </span>
+                  </div>
+
+                  {property.safety?.level && (
+                    <div className="absolute bottom-3 right-3">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize flex items-center gap-1 ${
+                        property.safety.level === 'safe' 
+                          ? 'bg-green-500/90 text-white' 
+                          : property.safety.level === 'moderate'
+                          ? 'bg-yellow-500/90 text-white'
+                          : 'bg-red-500/90 text-white'
+                      }`}>
+                        <FaShieldAlt className="text-xs" />
+                        {property.safety.level}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-lg font-bold text-gray-900 line-clamp-1 flex-1">
+                      {property.name}
+                    </h3>
+                    {property.featured && (
+                      <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium ml-2">
+                        Featured
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center text-gray-600 mb-3">
+                    <FaMapMarkerAlt className="text-[#E83A17] text-sm mr-1 flex-shrink-0" />
+                    <span className="text-sm truncate">{formatLocation(property.location)}</span>
+                  </div>
+
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    {property.shortDescription || property.description}
+                  </p>
+
+                  {property.features?.activities && property.features.activities.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {property.features.activities.slice(0, 3).map((activity, idx) => (
+                        <div key={idx} className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full text-xs text-gray-700">
+                          {getActivityIcon(activity)}
+                          <span className="capitalize">{activity.replace('_', ' ')}</span>
+                        </div>
+                      ))}
+                      {property.features.activities.length > 3 && (
+                        <span className="bg-gray-200 px-2 py-1 rounded-full text-xs text-gray-600">
+                          +{property.features.activities.length - 3} more
                         </span>
                       )}
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {getBestVisitTime(property.bestVisitTime) && (
-                  <div className="text-xs text-gray-500 mb-2">
-                    <span className="font-medium">Best time:</span> {getBestVisitTime(property.bestVisitTime)}
-                  </div>
-                )}
+                  {property.rating?.overall > 0 && (
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-1">
+                        <FaStar className="text-yellow-500 text-sm" />
+                        <span className="text-sm font-medium">{property.rating.overall.toFixed(1)}</span>
+                        {property.rating.totalReviews > 0 && (
+                          <span className="text-xs text-gray-500">
+                            ({property.rating.totalReviews} reviews)
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
 
-                <div className="text-xs text-gray-500">
-                  {property.operatingHours?.isAlwaysOpen ? (
-                    <span className="text-green-600 font-medium">Open 24/7</span>
-                  ) : (
-                    <span>Check operating hours</span>
+                  {getBestVisitTime(property.bestVisitTime) && (
+                    <div className="text-xs text-gray-500 mb-2">
+                      <span className="font-medium">Best time:</span> {getBestVisitTime(property.bestVisitTime)}
+                    </div>
+                  )}
+
+                  <div className="text-xs text-gray-500">
+                    {property.operatingHours?.isAlwaysOpen ? (
+                      <span className="text-green-600 font-medium">Open 24/7</span>
+                    ) : (
+                      <span>Check operating hours</span>
+                    )}
+                  </div>
+
+                  {property.accessibility && (
+                    <div className="mt-2 flex gap-2 text-xs">
+                      {property.accessibility.publicTransport && (
+                        <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                          Public Transport
+                        </span>
+                      )}
+                      {property.accessibility.walkingDistance === 'easy' && (
+                        <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                          Easy Walk
+                        </span>
+                      )}
+                    </div>
                   )}
                 </div>
-
-                {property.accessibility && (
-                  <div className="mt-2 flex gap-2 text-xs">
-                    {property.accessibility.publicTransport && (
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                        Public Transport
-                      </span>
-                    )}
-                    {property.accessibility.walkingDistance === 'easy' && (
-                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                        Easy Walk
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       )}
 
